@@ -7,6 +7,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         initTimber()
+        initKoin(this)
     }
 
     private fun initTimber() {

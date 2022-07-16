@@ -11,13 +11,14 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 fun buildApiService(credentialProvider: CredentialProvider): LiveScoreApiService {
     val retrofit = Retrofit.Builder()
         .baseUrl(credentialProvider.baseUrl())
-        .addConverterFactory(GsonConverterFactory.create(Gson()))
         .addConverterFactory(ApiResultConverterFactory)
         .addCallAdapterFactory(ApiResultCallAdapterFactory)
+        .addConverterFactory(GsonConverterFactory.create(Gson()))
         .client(buildOkClient(credentialProvider))
         .build()
     return retrofit.create(LiveScoreApiService::class.java)
@@ -25,6 +26,8 @@ fun buildApiService(credentialProvider: CredentialProvider): LiveScoreApiService
 
 private fun buildOkClient(credentialProvider: CredentialProvider): OkHttpClient = OkHttpClient
     .Builder()
+    .readTimeout(60, TimeUnit.SECONDS)
+    .writeTimeout(60, TimeUnit.SECONDS)
     .addInterceptor(buildQueryParamInterceptor(credentialProvider))
     .addInterceptor(buildLoggingInterceptor())
     .build()
