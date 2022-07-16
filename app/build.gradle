@@ -3,6 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdk 32
 
@@ -20,6 +23,11 @@ android {
     }
 
     buildTypes {
+        all {
+            resValue("string", "livescore_api_url", localProperties['LIVESCORE_API_URL'])
+            resValue("string", "livescore_api_key", localProperties['LIVESCORE_API_KEY'])
+            resValue("string", "livescore_api_secret", localProperties['LIVESCORE_API_SECRET'])
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -59,4 +67,14 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    // Logging
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // Networking
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.slack.eithernet:eithernet:1.2.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 }
