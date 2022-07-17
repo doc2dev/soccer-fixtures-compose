@@ -1,18 +1,21 @@
 package ke.eston.soccerfixtures.ui.fixtures
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ke.eston.soccerfixtures.R
@@ -69,17 +72,20 @@ fun FixtureItem(
         elevation = 4.dp
     ) {
         Row(modifier = Modifier.padding(4.dp)) {
-            Image(
-                painter = painterResource(imgId),
-                contentDescription = "Soccer ball",
-                modifier = Modifier.size(32.dp)
-            )
+            Column {
+                Spacer(modifier = Modifier.height(16.dp))
+                Image(
+                    painter = painterResource(imgId),
+                    contentDescription = "Soccer ball",
+                    modifier = Modifier.size(32.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = teamText)
+                Text(text = teamText, style = MaterialTheme.typography.h6)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = fixture.date)
-                Text(text = fixture.timeUtc)
+                Text(text = "Date: ${fixture.date}", style = MaterialTheme.typography.body2)
+                Text(text = "UTC Time: ${fixture.timeUtc}", style = MaterialTheme.typography.body2)
             }
         }
     }
@@ -109,9 +115,14 @@ fun ErrorView(error: Error) {
                 contentDescription = "Error graphic"
             )
             Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "An error happened")
-            Text(text = "Code:  ${error.code}")
-            Text(text = "Error message:  ${error.message}")
+            Column {
+                Text(text = "An error happened")
+                Text(text = "Code:  ${error.code}", style = MaterialTheme.typography.body2)
+                Text(
+                    text = "Error message:  ${error.message}",
+                    style = MaterialTheme.typography.body2
+                )
+            }
         }
     }
 }
