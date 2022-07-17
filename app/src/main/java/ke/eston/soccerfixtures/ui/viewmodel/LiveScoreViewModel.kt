@@ -17,13 +17,12 @@ class LiveScoreViewModel(
     private val repository: LiveScoreRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val fixtureState: MutableStateFlow<FixtureState> = MutableStateFlow(
-        FixtureState.FixturesUnavailable(isLoading = false)
-    )
+    private val initialState = FixtureState.FixturesUnavailable(isLoading = false)
+    private val fixtureState: MutableStateFlow<FixtureState> = MutableStateFlow(initialState)
     val fixtureUiState = fixtureState.stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
-        FixtureState.FixturesUnavailable(isLoading = false)
+        initialState
     )
 
     fun getFixtures() = viewModelScope.launch(ioDispatcher) {
