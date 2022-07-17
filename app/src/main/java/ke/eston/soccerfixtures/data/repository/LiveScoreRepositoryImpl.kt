@@ -30,4 +30,9 @@ class LiveScoreRepositoryImpl(
             }
         }
     }
+
+    override suspend fun getH2HData(homeTeamId: String, awayTeamId: String) {
+        apiService.getH2HData(homeTeamId, awayTeamId)
+        // Logging interceptor will log result
+    }
 }

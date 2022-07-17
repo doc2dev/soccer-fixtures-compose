@@ -25,15 +25,19 @@ import ke.eston.soccerfixtures.ui.viewmodel.LiveScoreViewModel
 @Composable
 fun FixtureScreen(viewModel: LiveScoreViewModel) {
     val fixtureState by viewModel.fixtureUiState.collectAsState()
-    //Timber.tag("FOOBAR").d("Fixture state: $fixtureState")
     when (fixtureState) {
         is FixturesUnavailable -> FixtureLoadingOrError(state = fixtureState as FixturesUnavailable)
-        else -> FixtureView(state = fixtureState as FixturesAvailable)
+        else -> FixtureView(state = fixtureState as FixturesAvailable) {
+            viewModel.getH2HData(it)
+        }
     }
 }
 
 @Composable
-fun FixtureView(state: FixturesAvailable) {
+fun FixtureView(
+    state: FixturesAvailable,
+    onFixtureClick: (Fixture) -> Unit
+) {
     val fixtures = state.fixtures
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -43,7 +47,7 @@ fun FixtureView(state: FixturesAvailable) {
             Text("Fixtures for Today")
             LazyColumn() {
                 items(fixtures) { fixture ->
-                    FixtureItem(fixture)
+                    FixtureItem(fixture, onFixtureClick)
                 }
             }
         }
@@ -51,14 +55,17 @@ fun FixtureView(state: FixturesAvailable) {
 }
 
 @Composable
-fun FixtureItem(fixture: Fixture) {
+fun FixtureItem(
+    fixture: Fixture,
+    onFixtureClick: (Fixture) -> Unit
+) {
     val teamText = "${fixture.homeTeamName} vs ${fixture.awayTeamName}"
     val imgId = R.drawable.ic_soccer_24
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(15.dp)
-            .clickable { },
+            .clickable { onFixtureClick(fixture) },
         elevation = 4.dp
     ) {
         Row(modifier = Modifier.padding(4.dp)) {

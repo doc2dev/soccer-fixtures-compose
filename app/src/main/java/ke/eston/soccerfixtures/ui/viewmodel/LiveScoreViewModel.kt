@@ -43,6 +43,12 @@ class LiveScoreViewModel(
             }
         }
     }
+
+    fun getH2HData(fixture: Fixture) = viewModelScope.launch(ioDispatcher) {
+        fixture.apply {
+            repository.getH2HData(homeTeamId.toString(), awayTeamId.toString())
+        }
+    }
 }
 
 sealed interface FixtureState {
